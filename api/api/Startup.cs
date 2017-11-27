@@ -47,9 +47,10 @@ namespace api
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("UserManagement", policy => policy.RequireClaim("manage_user"));
-                options.AddPolicy("Admin", policy => policy.RequireClaim("admin"));
-                options.AddPolicy("User", policy => policy.RequireClaim("user"));
+                options.AddPolicy("UserManagement", policy => policy.RequireClaim(Utils.Extensions.ManageUserClaim));
+                options.AddPolicy("Admin", policy => policy.RequireClaim(Utils.Extensions.AdminClaim));
+                options.AddPolicy("User", policy => policy.RequireClaim(Utils.Extensions.UserClaim));
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole(Utils.Extensions.AdminRole));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -128,7 +129,7 @@ namespace api
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
             ApiDbSeedData.Seed(userManager, roleManager).Wait();
 
             if (env.IsDevelopment())

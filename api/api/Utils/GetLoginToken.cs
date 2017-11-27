@@ -1,6 +1,8 @@
 ﻿
 using api.Models;
 using api.Providers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -36,7 +38,6 @@ namespace api.Utils
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-                //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUniversalTime().ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
@@ -47,8 +48,13 @@ namespace api.Utils
             {
                 claims.Add(new Claim(userClaim.ClaimType, userClaim.ClaimValue));
             }
-
-
+            var userRoles = db.UserRoles.Where(i => i.UserId == user.Id);
+            foreach(var userRole in userRoles)
+            {
+                var role = db.Roles.Single(i => i.Id == userRole.RoleId);
+                claims.Add(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role.Name));
+            }
+            
             var jwt = new JwtSecurityToken(
                 issuer: options.Issuer,
                 audience: options.Audience,
@@ -65,7 +71,7 @@ namespace api.Utils
                 userName = user.UserName,
                 firstName = user.FirstName,
                 lastName = user.LastName,
-                isAdmin = userClaims.Any(i => i.ClaimType == Extensions.AdminClaim)
+                //isAdmin = claims.Any(i => i. == Extensions.AdminClaim)
             };
             return response;
         }
