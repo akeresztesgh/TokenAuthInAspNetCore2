@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
-    [Authorize]
+    [Authorize(Policy ="admin")]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {

@@ -9,6 +9,10 @@ namespace api.Utils
     public static class Extensions
     {
         public const string AdminClaim = "admin";
+        public const string UserClaim = "user";
+        public const string ManageUserClaim = "manage_user";
+        public const string AdminRole = "admin";
+        public const string UserRole = "user";
 
         public static string Error(this ModelStateDictionary modelState)
         {

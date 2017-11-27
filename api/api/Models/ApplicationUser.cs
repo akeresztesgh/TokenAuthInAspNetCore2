@@ -11,7 +11,5 @@ namespace api.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsEnabled { get; set; }
-        public virtual ICollection<IdentityUserClaim<string>> Claims { get; } = new List<IdentityUserClaim<string>>();
-        public virtual ICollection<IdentityUserRole<string>> Roles { get; } = new List<IdentityUserRole<string>>();
     }
 }

@@ -42,7 +42,8 @@ namespace api.Utils
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
             };
 
-            foreach (var userClaim in user.Claims)
+            var userClaims = db.UserClaims.Where(i => i.UserId == user.Id);
+            foreach (var userClaim in userClaims)
             {
                 claims.Add(new Claim(userClaim.ClaimType, userClaim.ClaimValue));
             }
@@ -64,7 +65,7 @@ namespace api.Utils
                 userName = user.UserName,
                 firstName = user.FirstName,
                 lastName = user.LastName,
-                isAdmin = user.Claims.Any(i => i.ClaimType == Extensions.AdminClaim)
+                isAdmin = userClaims.Any(i => i.ClaimType == Extensions.AdminClaim)
             };
             return response;
         }

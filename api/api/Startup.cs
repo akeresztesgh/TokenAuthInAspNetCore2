@@ -45,6 +45,13 @@ namespace api
             {                
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("UserManagement", policy => policy.RequireClaim("manage_user"));
+                options.AddPolicy("Admin", policy => policy.RequireClaim("admin"));
+                options.AddPolicy("User", policy => policy.RequireClaim("user"));
+            });
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;

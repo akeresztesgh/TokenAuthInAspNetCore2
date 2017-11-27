@@ -65,7 +65,8 @@ namespace api.Providers
                     await context.Response.WriteAsync("Invalid username or password.");
                     return;
                 }
-                var user = await userManager.Users.SingleAsync(i => i.UserName == username);
+                var user = await userManager.Users
+                    .SingleAsync(i => i.UserName == username);
                 if (!user.IsEnabled)
                 {
                     context.Response.StatusCode = 400;

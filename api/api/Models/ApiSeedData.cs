@@ -23,40 +23,40 @@ namespace api.Models
         private static async Task SeedRolesAndClaims(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
 
-            if (!await roleManager.RoleExistsAsync("admin"))
+            if (!await roleManager.RoleExistsAsync(Extensions.AdminRole))
             {
                 await roleManager.CreateAsync(new IdentityRole
                 {
-                    Name = "admin"
+                    Name = Extensions.AdminRole
                 });
             }
 
-            if (!await roleManager.RoleExistsAsync("user"))
+            if (!await roleManager.RoleExistsAsync(Extensions.UserRole))
             {
                 await roleManager.CreateAsync(new IdentityRole
                 {
-                    Name = "user"
+                    Name = Extensions.UserRole
                 });
             }
 
 
-            var adminRole = await roleManager.FindByNameAsync("admin");
+            var adminRole = await roleManager.FindByNameAsync(Extensions.AdminRole);
             var adminRoleClaims = await roleManager.GetClaimsAsync(adminRole);
 
-            if (!adminRoleClaims.Any(x => x.Type == "manage_user"))
+            if (!adminRoleClaims.Any(x => x.Type == Extensions.ManageUserClaim))
             {
-                await roleManager.AddClaimAsync(adminRole, new System.Security.Claims.Claim("manage_user", "true"));
+                await roleManager.AddClaimAsync(adminRole, new System.Security.Claims.Claim(Extensions.ManageUserClaim, "true"));
             }
             if (!adminRoleClaims.Any(x => x.Type == Extensions.AdminClaim))
             {
                 await roleManager.AddClaimAsync(adminRole, new System.Security.Claims.Claim(Extensions.AdminClaim, "true"));
             }
 
-            var userRole = await roleManager.FindByNameAsync("user");
+            var userRole = await roleManager.FindByNameAsync(Extensions.UserRole);
             var userRoleClaims = await roleManager.GetClaimsAsync(userRole);
-            if (!userRoleClaims.Any(x => x.Type == "user"))
+            if (!userRoleClaims.Any(x => x.Type == Extensions.UserClaim))
             {
-                await roleManager.AddClaimAsync(userRole, new System.Security.Claims.Claim("user", "true"));
+                await roleManager.AddClaimAsync(userRole, new System.Security.Claims.Claim(Extensions.UserClaim, "true"));
             }
         }
 
@@ -77,15 +77,12 @@ namespace api.Models
                 var x = await userManager.CreateAsync(u, "Admin1234!");
             }
             var uc = await userManager.GetClaimsAsync(u);
-            if (!uc.Any(x => x.Type == "phone"))
-            {
-                await userManager.AddClaimAsync(u, new System.Security.Claims.Claim("phone", "867-5309"));
-            }
-
             if (!uc.Any(x => x.Type == Extensions.AdminClaim))
             {
                 await userManager.AddClaimAsync(u, new System.Security.Claims.Claim(Extensions.AdminClaim, true.ToString()));
             }
+            if(!await userManager.IsInRoleAsync(u, Extensions.AdminRole))
+                await userManager.AddToRoleAsync(u, Extensions.AdminRole);
         }
     }
 }
