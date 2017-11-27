@@ -52,7 +52,7 @@ namespace api.Utils
             foreach(var userRole in userRoles)
             {
                 var role = db.Roles.Single(i => i.Id == userRole.RoleId);
-                claims.Add(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role.Name));
+                claims.Add(new Claim(Extensions.RoleClaimType, role.Name));
             }
             
             var jwt = new JwtSecurityToken(
@@ -71,7 +71,7 @@ namespace api.Utils
                 userName = user.UserName,
                 firstName = user.FirstName,
                 lastName = user.LastName,
-                //isAdmin = claims.Any(i => i. == Extensions.AdminClaim)
+                isAdmin = claims.Any(i => i.Type == Extensions.RoleClaimType && i.Value == Extensions.AdminRole)
             };
             return response;
         }
