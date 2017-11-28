@@ -15,10 +15,10 @@ namespace api.Models
 
         protected ApiDbContext()
         {
-        }
+        }       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {            
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -11,8 +11,8 @@ using System;
 namespace api.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20171124201434_initial")]
-    partial class initial
+    [Migration("20171128193152_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -126,8 +126,6 @@ namespace api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
@@ -136,8 +134,6 @@ namespace api.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -168,11 +164,7 @@ namespace api.Migrations
 
                     b.Property<string>("RoleId");
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RoleId");
 
@@ -205,10 +197,6 @@ namespace api.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("api.Models.ApplicationUser")
-                        .WithMany("Claims")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("api.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -224,10 +212,6 @@ namespace api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("api.Models.ApplicationUser")
-                        .WithMany("Roles")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
