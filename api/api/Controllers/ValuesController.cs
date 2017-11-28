@@ -9,7 +9,8 @@ namespace api.Controllers
 {
     //[Authorize(Policy ="admin")]
     //[Authorize(Policy = "RequireAdministratorRole")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]  // case sensitive!
+    //[Authorize]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
